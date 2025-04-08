@@ -32,12 +32,13 @@ use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * @Route("/admin/pimcoredatahub/config")
+ * @internal
  */
+#[Route('/admin/pimcoredatahub/config')]
 class ConfigController extends \Pimcore\Controller\UserAwareController
 {
     use JsonHelperTrait;
@@ -69,11 +70,7 @@ class ConfigController extends \Pimcore\Controller\UserAwareController
         ];
     }
 
-    /**
-     * @Route("/list")
-     *
-     *
-     */
+    #[Route('/list')]
     public function listAction(Request $request): JsonResponse
     {
         // check permissions
@@ -128,10 +125,9 @@ class ConfigController extends \Pimcore\Controller\UserAwareController
     }
 
     /**
-     * @Route("/delete")
-     *
      * @throws ConfigWriteException
      */
+    #[Route('/delete')]
     public function deleteAction(Request $request): ?JsonResponse
     {
         $this->checkPermission(self::CONFIG_NAME);
@@ -165,10 +161,9 @@ class ConfigController extends \Pimcore\Controller\UserAwareController
     }
 
     /**
-     * @Route("/add")
-     *
      * @throws ConfigWriteException
      */
+    #[Route('/add')]
     public function addAction(Request $request): ?JsonResponse
     {
         $this->checkPermission(self::CONFIG_NAME);
@@ -198,11 +193,7 @@ class ConfigController extends \Pimcore\Controller\UserAwareController
         }
     }
 
-    /**
-     * @Route("/clone")
-     *
-     *
-     */
+    #[Route('/clone')]
     public function cloneAction(Request $request): ?JsonResponse
     {
         $this->checkPermission(self::CONFIG_NAME);
@@ -238,10 +229,9 @@ class ConfigController extends \Pimcore\Controller\UserAwareController
     }
 
     /**
-     * @Route("/get")
-     *
      * @throws \Exception
      */
+    #[Route('/get')]
     public function getAction(Request $request, Service $graphQlService, EventDispatcherInterface $eventDispatcher): JsonResponse
     {
         $this->checkPermission(self::CONFIG_NAME);
@@ -386,11 +376,7 @@ class ConfigController extends \Pimcore\Controller\UserAwareController
         );
     }
 
-    /**
-     * @Route("/save")
-     *
-     *
-     */
+    #[Route('/save')]
     public function saveAction(Request $request): ?JsonResponse
     {
         $this->checkPermission(self::CONFIG_NAME);
@@ -468,10 +454,9 @@ class ConfigController extends \Pimcore\Controller\UserAwareController
     }
 
     /**
-     * @Route("/get-explorer-url")
-     *
      * @throws \Exception
      */
+    #[Route('/get-explorer-url')]
     public function getExplorerUrlAction(RouterInterface $routingService, Request $request): ?JsonResponse
     {
         $name = $request->query->getString('name');
@@ -485,10 +470,9 @@ class ConfigController extends \Pimcore\Controller\UserAwareController
     }
 
     /**
-     * @Route("/thumbnail-tree")
-     *
      * @return JsonResponse
      */
+    #[Route('/thumbnail-tree')]
     public function thumbnailTreeAction(Request $request)
     {
         $this->checkPermission('thumbnails');
@@ -509,10 +493,9 @@ class ConfigController extends \Pimcore\Controller\UserAwareController
     }
 
     /**
-     * @Route("/permissions-users", methods={"GET"})
-     *
      * @return JsonResponse
      */
+    #[Route('/permissions-users', methods: ['GET'])]
     public function getPermissionUsersAction(Request $request)
     {
         $type = $request->query->getString('type', 'user');
@@ -540,10 +523,7 @@ class ConfigController extends \Pimcore\Controller\UserAwareController
         return $this->jsonResponse($users);
     }
 
-    /**
-     * @Route("/export", methods={"GET"})
-     *
-     */
+    #[Route('/export', methods: ['GET'])]
     public function exportConfiguration(Request $request, ExportService $exportService): Response
     {
         $this->checkPermission(self::CONFIG_NAME);
@@ -570,10 +550,7 @@ class ConfigController extends \Pimcore\Controller\UserAwareController
         return $response;
     }
 
-    /**
-     * @Route("/import", methods={"POST"})
-     *
-     */
+    #[Route('/import', methods: ['POST'])]
     public function importConfiguration(Request $request, ImportService $importService): JsonResponse
     {
         try {

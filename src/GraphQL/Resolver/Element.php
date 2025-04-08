@@ -32,6 +32,9 @@ use Pimcore\Model\Element\ElementInterface;
 use Pimcore\Model\Element\Service as ElementService;
 use Pimcore\Model\Property;
 
+/**
+ * @internal
+ */
 class Element
 {
     use ServiceTrait, ElementTagTrait;
@@ -162,6 +165,40 @@ class Element
         }
 
         return [];
+    }
+
+    public function resolveModificationDate(
+        array $value
+    ): ?string {
+        $id = $value['id'] ?? null;
+        if (!$id) {
+            return null;
+        }
+        $element = ElementService::getElementById($this->elementType, $id);
+        if (!$element) {
+            return null;
+        }
+
+        return $this->getGraphQlService()->getFormattedDateTimeStringFromTimestamp(
+            $element->getModificationDate()
+        );
+    }
+
+    public function resolveCreationDate(
+        array $value
+    ): ?string {
+        $id = $value['id'] ?? null;
+        if (!$id) {
+            return null;
+        }
+        $element = ElementService::getElementById($this->elementType, $id);
+        if (!$element) {
+            return null;
+        }
+
+        return $this->getGraphQlService()->getFormattedDateTimeStringFromTimestamp(
+            $element->getCreationDate()
+        );
     }
 
     /**

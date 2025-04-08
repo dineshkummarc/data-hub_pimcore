@@ -19,7 +19,10 @@ use GraphQL\Type\Definition\Type;
 use Pimcore\Bundle\DataHubBundle\GraphQL\General\FolderType;
 use Pimcore\Bundle\DataHubBundle\GraphQL\Service;
 
-class ObjectFolderType extends FolderType
+/**
+ * @internal
+ */
+final class ObjectFolderType extends FolderType
 {
     /**
      * @param array $config
@@ -49,8 +52,14 @@ class ObjectFolderType extends FolderType
             'fullpath' => [
                 'type' => Type::string(),
             ],
-            'creationDate' => Type::int(),
-            'modificationDate' => Type::int(),
+            'creationDate' => [
+                'type' => Type::string(),
+                'resolve' => [$resolver, 'resolveCreationDate'],
+            ],
+            'modificationDate' => [
+                'type' => Type::string(),
+                'resolve' => [$resolver, 'resolveModificationDate'],
+            ],
             'parent' => [
                 'type' => $objectTreeType,
                 'resolve' => [$resolver, 'resolveParent'],

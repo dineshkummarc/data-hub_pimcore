@@ -26,7 +26,10 @@ use Pimcore\Event\Model\AssetEvent;
 use Pimcore\Model\Asset;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class AssetType
+/**
+ * @internal
+ */
+final class AssetType
 {
     use ServiceTrait, ElementTagTrait;
 
@@ -91,7 +94,13 @@ class AssetType
         foreach ($metadata as $item) {
             $keys[$item['name']] = 1;
             $l = $item['language'] ?: 'default';
+            if ($item['type'] === 'date') {
+                $item['data'] = $this->getGraphQlService()->getFormattedDateTimeStringFromTimestamp(
+                    $item['data']
+                );
+            }
             $map[$l][$item['name']] = $item;
+
         }
         $result = [];
 
@@ -373,6 +382,38 @@ class AssetType
         }
 
         return null;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function resolveModificationDate(
+        ElementDescriptor $value
+    ): ?string {
+        $asset = $this->getAssetFromValue($value, []);
+        if (!$asset) {
+            return null;
+        }
+
+        return $this->getGraphQlService()->getFormattedDateTimeStringFromTimestamp(
+            $asset->getModificationDate()
+        );
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function resolveCreationDate(
+        ElementDescriptor $value
+    ): ?string {
+        $asset = $this->getAssetFromValue($value, []);
+        if (!$asset) {
+            return null;
+        }
+
+        return $this->getGraphQlService()->getFormattedDateTimeStringFromTimestamp(
+            $asset->getCreationDate()
+        );
     }
 
     /**

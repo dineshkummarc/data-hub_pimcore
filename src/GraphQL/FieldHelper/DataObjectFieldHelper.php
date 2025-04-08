@@ -28,7 +28,7 @@ use Pimcore\Model\DataObject\Fieldcollection\Data\AbstractData;
 use Pimcore\Model\DataObject\Localizedfield;
 use Pimcore\Model\DataObject\Objectbrick\Definition;
 
-class DataObjectFieldHelper extends AbstractFieldHelper
+final class DataObjectFieldHelper extends AbstractFieldHelper
 {
     /**
      * @param array $nodeDef
@@ -63,15 +63,6 @@ class DataObjectFieldHelper extends AbstractFieldHelper
             // system columns which are not part of the common set (see PimcoreObjectType)
             if ($attributes['dataType'] == 'system') {
                 switch ($key) {
-                    case 'creationDate':
-                    case 'modificationDate':
-                        return [
-                            'key' => $key,
-                            'config' => [
-                                'name' => $key,
-                                'type' => Type::int(),
-                            ],
-                        ];
                     case 'filename':
                     case 'fullpath':
                     case 'key':
